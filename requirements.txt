@@ -10,7 +10,7 @@ Click==7.0
 constantly==15.1.0
 cycler==0.10.0
 daphne==2.2.3
-Django==1.11
+Django>=1.11.15
 graphviz==0.10.1
 gunicorn==19.9.0
 h11==0.8.1
