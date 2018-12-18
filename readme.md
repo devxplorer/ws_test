@@ -5,8 +5,8 @@
 - `python manage.py migrate`
 
 ### how to run test script
-- `mprof run daphne -b 0.0.0.0 -p=8087 djws.asgi:application`
-- OR `mprof run --multiprocess gunicorn djws.asgi:application -b :8087 -w 2 -k uvicorn.workers.UvicornWorker`
+- `mprof run daphne -b 0.0.0.0 -p=8089 djws.asgi:application`
+- OR `mprof run --multiprocess gunicorn djws.asgi:application -b :8089 -w 2 -k uvicorn.workers.UvicornWorker`
 - `python scripts/ws_test.py`
 - stop server (daphne OR gunicorn+uvicorn)
 - `mprof plot`

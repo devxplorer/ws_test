@@ -1,33 +1,26 @@
-import gc
 import os
-import random
 from datetime import datetime
 
+import objgraph
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import JsonWebsocketConsumer
 
-GC_RUN_CHANCE_PERCENTAGES = 10
-
-
-def gc_collect_with_chance(percentages_chance):
-    ospid = os.getpid()
-    if random.randint(1, 100) <= percentages_chance:
-        with open('./logs/gc_collect_run.log'.format(ospid), 'a') as f:
-            f.write("{} ({})\n".format(datetime.now().isoformat(), ospid))
-        gc.collect()
+ospid = os.getpid()
 
 
 def save_objgraph_info():
+    dt_iso = datetime.now().isoformat()
     with open('./logs/growth_{}.log'.format(ospid), 'a') as f:
-        # with open('./logs/most_common_types.log', 'wa') as f:
-        f.write("{}\n".format(datetime.now().isoformat()))
+        f.write("{}\n".format(dt_iso))
         objgraph.show_growth(limit=20, shortnames=False, file=f)
-        # objgraph.show_most_common_types(limit=20, file=f)
+
+    with open('./logs/most_common_types_{}.log'.format(ospid), 'a') as f:
+        f.write("{}\n".format(dt_iso))
+        objgraph.show_most_common_types(limit=20, file=f)
 
 
 class WsUsersConsumer(JsonWebsocketConsumer):
     def connect(self):
-        # gc_collect_with_chance(GC_RUN_CHANCE_PERCENTAGES)
         # save_objgraph_info()
 
         self.user = self.scope['user']

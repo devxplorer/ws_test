@@ -7,14 +7,10 @@ from multiprocessing import Process
 from websocket import create_connection
 
 
-def rand_sleep():
-    time.sleep(random.randint(1, 20) * 0.1)
-
-
 def f():
-    for i in range(500):
+    for i in range(1000):
         ws = create_connection(
-            'ws://localhost:8087/ws/users/',
+            'ws://localhost:8089/ws/users/',
             sockopt=(
                 (socket.IPPROTO_TCP, socket.TCP_NODELAY, 1),
             )
@@ -27,8 +23,23 @@ def f():
         ws.close()
         print(i, resp)
 
+def f2():
+    ws = create_connection(
+        'ws://localhost:8089/ws/users/',
+        sockopt=(
+            (socket.IPPROTO_TCP, socket.TCP_NODELAY, 1),
+        )
+    )
+    for i in range(50):
+        big_payload = "p"*999999
+        ws.send(payload=json.dumps({"text": "hello_world", "big_payload": big_payload}))
+        resp = ws.recv()
+        print(i, len(resp))
+        time.sleep(1)
+    ws.close()
+
 
 if __name__ == '__main__':
-    for i in range(25):
-        p = Process(target=f)
+    for i in range(1):
+        p = Process(target=f2)
         p.start()
